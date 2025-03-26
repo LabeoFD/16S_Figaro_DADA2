@@ -14,15 +14,24 @@ FIGARO requires that all sequences it is given to scan are the same length. This
 - Script used: `check_read_lengths.sh`
 **Analysis of Read Length Distribution for Sample1**
 Looking at your read length distribution for Sample1, we can observe the following:
+
 **Forward Reads (R1)**
 The forward reads show these key patterns:
+
 Majority length: 301bp (145,545 reads)
+
 Secondary peaks: 241bp (40,207), 240bp (21,172), and 239bp (16,207)
+
 The steep drop-off from 301bp to other lengths suggests sequencing was done to achieve a target read length of 301bp
+
 **Reverse Reads (R2)**
+
 The reverse reads show a slightly different pattern:
+
 Majority length: 300bp (143,371 reads)
+
 Notable difference: The most common length is 300bp rather than 301bp
+
 Secondary peaks: Similar to R1 with 241bp (37,212), 301bp (29,893), and 240bp (19,033)
 
 NOTE: The fact that R1 reads are predominantly 301bp while R2 reads are predominantly 300bp could indicate slightly different quality profiles between forward and reverse reads. This is typical in Illumina paired-end sequencing, where reverse reads often have slightly lower quality.
