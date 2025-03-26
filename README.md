@@ -16,6 +16,7 @@ FIGARO requires that all sequences it is given to scan are the same length. This
 Looking at your read length distribution for Sample1, we can observe the following:
 
 **Forward Reads (R1)**
+
 The forward reads show these key patterns:
 
 Majority length: 301bp (145,545 reads)
@@ -35,6 +36,37 @@ Notable difference: The most common length is 300bp rather than 301bp
 Secondary peaks: Similar to R1 with 241bp (37,212), 301bp (29,893), and 240bp (19,033)
 
 NOTE: The fact that R1 reads are predominantly 301bp while R2 reads are predominantly 300bp could indicate slightly different quality profiles between forward and reverse reads. This is typical in Illumina paired-end sequencing, where reverse reads often have slightly lower quality.
+
+# Step2: Trimming 
+
+Here's a breakdown of how our processing pipeline transformed these reads to achieve uniform 280bp reads for FIGARO analysis:
+
+## 2.1: Adapter Removal with Cutadapt
+
+```
+cutadapt \
+  -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG \
+  -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG \
+  -o ../trimmed_reads/temp_"$r1_file" \
+  -p ../trimmed_reads/temp_"$r2_file" \
+  "$r1_file" "$r2_file"
+ ```
+
+This initial step:
+
+- Removed Nextera adapters wherever they were found in the reads
+
+- Did not filter by length, so it preserved all reads regardless of their length after adapter removal
+  
+- The resulting files still had the original length distribution, but with adapter sequences removed
+  
+- Created temporary files to store these adapter-trimmed reads
+
+
+
+
+
+
 
 
 # Blogs and References
