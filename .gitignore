@@ -57,3 +57,11 @@ Thumbs.db
 #################
 data/
 DB/
+
+# R environment files
+.Rprofile
+.here
+
+# renv files
+renv/
+renv.lock
