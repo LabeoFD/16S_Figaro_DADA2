@@ -26,10 +26,10 @@ library(here)
 
 # Check dada2 package version
 packageVersion("dada2")
-# [1] ‘1.35.6’
+# [1] ‘1.36.0’
 
 # List fastq files
-list.files(here("Documents", "metaG_16S_dada2", "figaro_300bp_reads"))
+list.files(here("data/processed-data/fully_trimmed_reads/figaro_300bp_reads"))
 # [1] "Sample1_R1.fastq.gz"  "Sample1_R2.fastq.gz"  "Sample10_R1.fastq.gz"
 # [4] "Sample10_R2.fastq.gz" "Sample11_R1.fastq.gz" "Sample11_R2.fastq.gz"
 # [7] "Sample12_R1.fastq.gz" "Sample12_R2.fastq.gz" "Sample13_R1.fastq.gz"
@@ -56,81 +56,81 @@ list.files(here("Documents", "metaG_16S_dada2", "figaro_300bp_reads"))
 # [70] "Sample8_R2.fastq.gz"  "Sample9_R1.fastq.gz"  "Sample9_R2.fastq.gz"
 
 # Forward and reverse fastq filenames have format: SAMPLENAME_R1_001.fastq and SAMPLENAME_R2_001.fastq
-fnFs <- sort(list.files(here("Documents", "metaG_16S_dada2", "figaro_300bp_reads"), pattern="_R1.", full.names= TRUE))
-# [1] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample1_R1.fastq.gz" 
-# [2] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample10_R1.fastq.gz"
-# [3] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample11_R1.fastq.gz"
-# [4] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample12_R1.fastq.gz"
-# [5] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample13_R1.fastq.gz"
-# [6] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample14_R1.fastq.gz"
-# [7] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample15_R1.fastq.gz"
-# [8] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample16_R1.fastq.gz"
-# [9] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample17_R1.fastq.gz"
-# [10] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample18_R1.fastq.gz"
-# [11] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample19_R1.fastq.gz"
-# [12] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample2_R1.fastq.gz" 
-# [13] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample20_R1.fastq.gz"
-# [14] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample21_R1.fastq.gz"
-# [15] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample22_R1.fastq.gz"
-# [16] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample23_R1.fastq.gz"
-# [17] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample24_R1.fastq.gz"
-# [18] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample25_R1.fastq.gz"
-# [19] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample26_R1.fastq.gz"
-# [20] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample27_R1.fastq.gz"
-# [21] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample28_R1.fastq.gz"
-# [22] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample29_R1.fastq.gz"
-# [23] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample3_R1.fastq.gz" 
-# [24] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample30_R1.fastq.gz"
-# [25] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample31_R1.fastq.gz"
-# [26] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample32_R1.fastq.gz"
-# [27] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample33_R1.fastq.gz"
-# [28] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample34_R1.fastq.gz"
-# [29] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample35_R1.fastq.gz"
-# [30] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample36_R1.fastq.gz"
-# [31] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample4_R1.fastq.gz" 
-# [32] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample5_R1.fastq.gz" 
-# [33] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample6_R1.fastq.gz" 
-# [34] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample7_R1.fastq.gz" 
-# [35] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample8_R1.fastq.gz" 
-# [36] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample9_R1.fastq.gz" 
+fnFs <- sort(list.files(here("data/processed-data/fully_trimmed_reads/figaro_300bp_reads"), pattern="_R1.", full.names= TRUE))
+# [1] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample1_R1.fastq.gz" 
+# [2] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample10_R1.fastq.gz"
+# [3] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample11_R1.fastq.gz"
+# [4] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample12_R1.fastq.gz"
+# [5] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample13_R1.fastq.gz"
+# [6] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample14_R1.fastq.gz"
+# [7] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample15_R1.fastq.gz"
+# [8] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample16_R1.fastq.gz"
+# [9] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample17_R1.fastq.gz"
+# [10] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample18_R1.fastq.gz"
+# [11] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample19_R1.fastq.gz"
+# [12] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample2_R1.fastq.gz" 
+# [13] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample20_R1.fastq.gz"
+# [14] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample21_R1.fastq.gz"
+# [15] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample22_R1.fastq.gz"
+# [16] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample23_R1.fastq.gz"
+# [17] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample24_R1.fastq.gz"
+# [18] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample25_R1.fastq.gz"
+# [19] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample26_R1.fastq.gz"
+# [20] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample27_R1.fastq.gz"
+# [21] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample28_R1.fastq.gz"
+# [22] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample29_R1.fastq.gz"
+# [23] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample3_R1.fastq.gz" 
+# [24] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample30_R1.fastq.gz"
+# [25] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample31_R1.fastq.gz"
+# [26] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample32_R1.fastq.gz"
+# [27] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample33_R1.fastq.gz"
+# [28] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample34_R1.fastq.gz"
+# [29] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample35_R1.fastq.gz"
+# [30] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample36_R1.fastq.gz"
+# [31] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample4_R1.fastq.gz" 
+# [32] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample5_R1.fastq.gz" 
+# [33] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample6_R1.fastq.gz" 
+# [34] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample7_R1.fastq.gz" 
+# [35] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample8_R1.fastq.gz" 
+# [36] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample9_R1.fastq.gz" 
 
-fnRs <- sort(list.files(here("Documents", "metaG_16S_dada2", "figaro_300bp_reads"), pattern="_R2.", full.names= TRUE))
-# [1] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample1_R2.fastq.gz" 
-# [2] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample10_R2.fastq.gz"
-# [3] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample11_R2.fastq.gz"
-# [4] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample12_R2.fastq.gz"
-# [5] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample13_R2.fastq.gz"
-# [6] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample14_R2.fastq.gz"
-# [7] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample15_R2.fastq.gz"
-# [8] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample16_R2.fastq.gz"
-# [9] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample17_R2.fastq.gz"
-# [10] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample18_R2.fastq.gz"
-# [11] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample19_R2.fastq.gz"
-# [12] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample2_R2.fastq.gz" 
-# [13] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample20_R2.fastq.gz"
-# [14] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample21_R2.fastq.gz"
-# [15] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample22_R2.fastq.gz"
-# [16] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample23_R2.fastq.gz"
-# [17] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample24_R2.fastq.gz"
-# [18] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample25_R2.fastq.gz"
-# [19] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample26_R2.fastq.gz"
-# [20] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample27_R2.fastq.gz"
-# [21] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample28_R2.fastq.gz"
-# [22] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample29_R2.fastq.gz"
-# [23] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample3_R2.fastq.gz" 
-# [24] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample30_R2.fastq.gz"
-# [25] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample31_R2.fastq.gz"
-# [26] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample32_R2.fastq.gz"
-# [27] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample33_R2.fastq.gz"
-# [28] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample34_R2.fastq.gz"
-# [29] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample35_R2.fastq.gz"
-# [30] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample36_R2.fastq.gz"
-# [31] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample4_R2.fastq.gz" 
-# [32] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample5_R2.fastq.gz" 
-# [33] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample6_R2.fastq.gz" 
-# [34] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample7_R2.fastq.gz" 
-# [35] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample8_R2.fastq.gz" 
-# [36] "/Users/hediatnani/Documents/metaG_16S_dada2/figaro_300bp_reads/Sample9_R2.fastq.gz" 
+fnRs <- sort(list.files(here("data/processed-data/fully_trimmed_reads/figaro_300bp_reads"), pattern="_R2.", full.names= TRUE))
+# [1] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample1_R2.fastq.gz" 
+# [2] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample10_R2.fastq.gz"
+# [3] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample11_R2.fastq.gz"
+# [4] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample12_R2.fastq.gz"
+# [5] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample13_R2.fastq.gz"
+# [6] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample14_R2.fastq.gz"
+# [7] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample15_R2.fastq.gz"
+# [8] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample16_R2.fastq.gz"
+# [9] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample17_R2.fastq.gz"
+# [10] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample18_R2.fastq.gz"
+# [11] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample19_R2.fastq.gz"
+# [12] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample2_R2.fastq.gz" 
+# [13] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample20_R2.fastq.gz"
+# [14] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample21_R2.fastq.gz"
+# [15] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample22_R2.fastq.gz"
+# [16] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample23_R2.fastq.gz"
+# [17] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample24_R2.fastq.gz"
+# [18] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample25_R2.fastq.gz"
+# [19] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample26_R2.fastq.gz"
+# [20] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample27_R2.fastq.gz"
+# [21] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample28_R2.fastq.gz"
+# [22] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample29_R2.fastq.gz"
+# [23] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample3_R2.fastq.gz" 
+# [24] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample30_R2.fastq.gz"
+# [25] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample31_R2.fastq.gz"
+# [26] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample32_R2.fastq.gz"
+# [27] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample33_R2.fastq.gz"
+# [28] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample34_R2.fastq.gz"
+# [29] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample35_R2.fastq.gz"
+# [30] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample36_R2.fastq.gz"
+# [31] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample4_R2.fastq.gz" 
+# [32] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample5_R2.fastq.gz" 
+# [33] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample6_R2.fastq.gz" 
+# [34] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample7_R2.fastq.gz" 
+# [35] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample8_R2.fastq.gz" 
+# [36] "/home/hediatnani/16S_Figaro_DADA2/data/processed-data/fully_trimmed_reads/figaro_300bp_reads/Sample9_R2.fastq.gz" 
 
 # Extract sample names, assuming filenames have format: SAMPLENAME_XXX.fastq
 sample.names <- sapply(strsplit(basename(fnFs), "_"), `[`, 1) %>% str_sort(numeric = TRUE)
@@ -155,7 +155,7 @@ plotQualityProfile(fnRs[1:length(sample.names)])
 ##############################################################################
 
 # Define the path to the "trimmed-data" directory
-trimmed_dir <- file.path(here("Documents", "metaG_16S_dada2"), "filtered-data")
+trimmed_dir <- file.path(here("data/processed-data/"), "figaro-filtered-data")
 # Check if the directory exists; if not, create it (including parent directories if needed)
 if (!dir.exists(trimmed_dir)) {
   dir.create(trimmed_dir, recursive = TRUE)
@@ -165,9 +165,9 @@ if (!dir.exists(trimmed_dir)) {
 # 3) Define file paths for the trimmed output files
 ##############################################################################
 # Trimmed forward reads
-filtFs <- file.path(here("Documents", "metaG_16S_dada2"), "figaro-filtered-data", paste0(sample.names, "_F_filt.fastq.gz"))
+filtFs <- file.path(here("data/processed-data"), "figaro-filtered-data", paste0(sample.names, "_F_filt.fastq.gz"))
 # Trimmed reverse reads
-filtRs <- file.path(here("Documents", "metaG_16S_dada2"), "figaro-filtered-data", paste0(sample.names, "_R_filt.fastq.gz"))
+filtRs <- file.path(here("data/processed-data"), "figaro-filtered-data", paste0(sample.names, "_R_filt.fastq.gz"))
 
 names(filtFs) <- sample.names
 # [1] "Sample1"  "Sample2"  "Sample3"  "Sample4"  "Sample5"  "Sample6"  "Sample7"  "Sample8" 
@@ -389,7 +389,7 @@ track.nbr.reads <- cbind(
 colnames(track.nbr.reads) <- c("Input", "Filtered", "DenoisedF", "DenoisedR", "Merged", "NonChim")
 rownames(track.nbr.reads) <- sample.names
 head(track.nbr.reads)
-# Input   Filtered DenoisedF DenoisedR Merged NonChim
+#         Input Filtered DenoisedF DenoisedR Merged NonChim
 # Sample1 148408   109921    102776    103978  87176   57533
 # Sample2  28391    20892     19012     19244  16921   11149
 # Sample3 147001   116337    113988    114202 109819   70225
@@ -782,9 +782,9 @@ dada2_results %>%
 
 
 # Downloaded SILVA file
-silva_ref <- here("Documents/Meta_DB/Silva/v138_2/silva_nr99_v138.2_toGenus_trainset.fa.gz")
-# RefSeq_ref  <- here("Documents/Meta_DB/RefSeq/v16/RefSeq_16S_6-11-20_RDPv16_Genus.fa")
-# Greengenes2_ref  <- here("Documents/Meta_DB/Greengenes2/09/gg2_2024_09_toGenus_trainset.fa.gz")
+silva_ref <- here("DB/Silva/v138_2/silva_nr99_v138.2_toGenus_trainset.fa.gz")
+# RefSeq_ref  <- here("DB/RefSeq/v16/RefSeq_16S_6-11-20_RDPv16_Genus.fa")
+# Greengenes2_ref  <- here("DB/Greengenes2/09/gg2_2024_09_toGenus_trainset.fa.gz")
 # 
 
 # Assign Taxonomy with SILVA
@@ -796,7 +796,7 @@ taxa <- assignTaxonomy(
 )
 
 # Special case
-# Greengenes2_species_ref <- here("Documents/Meta_DB/Greengenes2/09/gg2_2024_09_toSpecies_trainset.fa.gz")
+# Greengenes2_species_ref <- here("DB/Greengenes2/09/gg2_2024_09_toSpecies_trainset.fa.gz")
 # # 
 # taxa_Species <- assignTaxonomy(
 #   seqtab.nochim, 
@@ -806,8 +806,8 @@ taxa <- assignTaxonomy(
 # )
 
 # Add species assignment
-silva_species_ref <- here("Documents/Meta_DB/Silva/v138_2/silva_v138.2_assignSpecies.fa.gz")
-# RefSeq_species_ref <- here("Documents/Meta_DB/RefSeq/v16/RefSeq_16S_6-11-20_RDPv16_Species.fa")
+silva_species_ref <- here("DB/Silva/v138_2/silva_v138.2_assignSpecies.fa.gz")
+# RefSeq_species_ref <- here("DB/RefSeq/v16/RefSeq_16S_6-11-20_RDPv16_Species.fa")
 
 # Add species-level assignment
 taxa <- addSpecies(
@@ -824,4 +824,10 @@ unname(taxa) %>%
   dplyr::rename(Genus = V1) %>% 
   group_by(Genus) %>% 
   summarize(count= n())
-
+# A tibble: 4 × 2
+# Genus     count
+#  <chr>     <int>
+# 1 Archaea      30
+# 2 Bacteria  18719
+# 3 Eukaryota   868
+# 4 NA          106
