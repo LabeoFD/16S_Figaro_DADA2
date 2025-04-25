@@ -252,6 +252,88 @@ out
 # Sample8_R1.fastq.gz    124154     93428
 # Sample9_R1.fastq.gz     22007     16870
 
+# Calculates retention rates as a percentage, adds formatted retention rates with % symbol,
+out_retained <- out %>% 
+  as.data.frame() %>% 
+  mutate(
+    retention_rate = reads.out / reads.in * 100,
+    retention_rate_formatted = paste(round(retention_rate, 2), "%"),
+    sample_number = as.numeric(gsub("_R1.fastq.gz", "", rownames(.)))
+  )
+
+# Calculate summary statistics
+summary_stats <- list(
+  mean_retention = mean(out_retained$retention_rate),
+  median_retention = median(out_retained$retention_rate),
+  sd_retention = sd(out_retained$retention_rate),
+  min_retention = min(out_retained$retention_rate),
+  max_retention = max(out_retained$retention_rate),
+  samples_below_75 = sum(out_retained$retention_rate < 75),
+  samples_above_85 = sum(out_retained$retention_rate > 85)
+)
+
+# Calculate overall retention rate across all samples
+overall_retention <- sum(out_retained$reads.out) / sum(out_retained$reads.in) * 100
+
+# Output summary statistics
+cat("Summary Statistics for Retention Rates:\n")
+cat(sprintf("Overall retention rate: %.2f%%\n", overall_retention))
+cat(sprintf("Mean retention rate: %.2f%%\n", summary_stats$mean_retention))
+cat(sprintf("Median retention rate: %.2f%%\n", summary_stats$median_retention))
+cat(sprintf("Range: %.2f%% - %.2f%%\n", summary_stats$min_retention, summary_stats$max_retention))
+cat(sprintf("Samples with retention < 75%%: %d\n", summary_stats$samples_below_75))
+cat(sprintf("Samples with retention > 85%%: %d\n", summary_stats$samples_above_85))
+
+
+# Identify samples with retention rates below 75%
+# Extract samples with retention rates below 75% using tidyverse approach
+low_retention_samples <- out_retained %>%
+  as_tibble(rownames = "sample_name") %>%  # Convert to tibble with rownames as a column
+  filter(retention_rate < 75) %>%
+  pull(sample_name) %>% 
+   gsub("_R1.fastq.gz", "", .)  # Remove prefix and suffix # Extract just the sample names
+
+
+# Identify samples with retention rates above 85%
+high_retention_samples <- out_retained %>%
+  as_tibble(rownames = "sample_name") %>%  # Convert to tibble with rownames as a column
+  filter(retention_rate > 85) %>%
+  pull(sample_name) %>% 
+  gsub("_R1.fastq.gz", "", .) # Extract just the sample names
+
+# Create a data frame for the summary statistics with sample names
+stats_table <- data.frame(
+  Statistic = c(
+    "Overall retention rate",
+    "Mean retention rate", 
+    "Median retention rate",
+    "Minimum retention rate",
+    "Maximum retention rate",
+    paste("Samples with retention < 75% (", length(low_retention_samples), ")", sep=""),
+    paste("Samples with retention > 85% (", length(high_retention_samples), ")", sep="")
+  ),
+  Value = c(
+    sprintf("%.2f%%", overall_retention),
+    sprintf("%.2f%%", summary_stats$mean_retention),
+    sprintf("%.2f%%", summary_stats$median_retention),
+    sprintf("%.2f%%", summary_stats$min_retention),
+    sprintf("%.2f%%", summary_stats$max_retention),
+    paste(low_retention_samples, collapse = ", "),
+    paste(high_retention_samples, collapse = ", ")
+  )
+)
+
+# Generate the table as a string using kable 
+table_string <- capture.output(
+  kable(stats_table, 
+        format = "pipe", 
+        caption = "Summary Statistics for Retention Rates")
+)
+
+# Print the table using cat
+cat(paste(table_string, collapse = "\n"), "\n")
+
+
 # Learn error rates
 errF <- learnErrors(filtFs, multithread=TRUE)
 # 105380548 total bases in 353626 reads from 4 samples will be used for learning the error rates.
@@ -278,6 +360,30 @@ derepFs <- derepFastq(filtFs, verbose = TRUE)
 
 derepRs <- derepFastq(filtRs, verbose = TRUE)
 
+
+# Compute dereplication stats using purrr
+derep_stats <- tibble(
+  Sample = names(derepFs),
+  
+  # Number of unique sequences
+  UniqueF = map_int(derepFs, ~length(.$uniques)),
+  UniqueR = map_int(derepRs, ~length(.$uniques)),
+  
+  # Total reads per sample (sum of abundance counts)
+  TotalF = map_int(derepFs, ~sum(.$uniques)),
+  TotalR = map_int(derepRs, ~sum(.$uniques)),
+  
+  # Compression = reads per unique sequence
+  CompressionF = map2_dbl(TotalF, UniqueF, ~round(.x / .y, 1)),
+  CompressionR = map2_dbl(TotalR, UniqueR, ~round(.x / .y, 1))
+)
+
+# Print summary
+cat("Dereplication summary:\n")
+cat("- Total unique forward sequences:", sum(derep_stats$UniqueF), "\n")
+cat("- Total unique reverse sequences:", sum(derep_stats$UniqueR), "\n")
+cat("- Average compression ratio (forward):", round(mean(derep_stats$CompressionF), 1), "reads per unique sequence\n")
+cat("- Average compression ratio (reverse):", round(mean(derep_stats$CompressionR), 1), "reads per unique sequence\n")
 
 # Denoise with DADA2
 dadaFs <- dada(derepFs, err = errF, multithread = TRUE)
@@ -356,6 +462,20 @@ dadaRs <- dada(derepRs, err = errR, multithread = TRUE)
 # Sample 35 - 93428 reads in 40744 unique sequences.
 # Sample 36 - 16870 reads in 8398 unique sequences.
 
+# Robust denoising stats
+denoising_stats <- tibble(
+  Sample = names(dadaFs),
+  
+  DenoisedF = map_int(dadaFs, ~ sum(.x$denoised)),
+  DenoisedR = map_int(dadaRs, ~ sum(.x$denoised))
+)
+
+# Print summary
+cat("Denoising summary:\n")
+cat("- Average denoised reads per sample (F):", round(mean(denoising_stats$DenoisedF), 0), "\n")
+cat("- Average denoised reads per sample (R):", round(mean(denoising_stats$DenoisedR), 0), "\n")
+
+
 # Merge Paired-End Reads
 mergers <- mergePairs(
   dadaFs, filtFs, 
@@ -363,6 +483,25 @@ mergers <- mergePairs(
   minOverlap = 20,   # Require ≥20bp overlap
   maxMismatch = 0    # Allow 0 mismatches in overlap
 ) 
+
+
+# Calculate average merged sequence length per sample
+avg_seq_length <- tibble(
+  Sample = names(mergers),
+  
+  # Weighted average length = sum(length * abundance) / sum(abundance)
+  AvgMergedLength = map_dbl(mergers, ~ {
+    seqs <- .$sequence
+    abunds <- .$abundance
+    weighted.mean(nchar(seqs), abunds)
+  })
+)
+
+# Print
+print(avg_seq_length)
+
+# Summary
+cat("Average merged sequence length across samples:", round(mean(avg_seq_length$AvgMergedLength), 1), "bp\n")
 
 # Create sequence table
 seqtab <- makeSequenceTable(mergers)
@@ -396,6 +535,71 @@ head(track.nbr.reads)
 # Sample4 123954   106476    104956    105492 102798   72320
 # Sample5 230651   187618    185241    185458 179518  102861
 # Sample6  72014    61112     59852     60011  57877   37970
+
+# Convert the matrix to a dataframe 
+track_df <- as.data.frame(track.nbr.reads)
+
+# ==== Calculate Percent Retained and Chimera Rate ====
+# For each processing step, calculate the percentage of input reads retained
+# Also calculate the chimera removal rate: (Merged - NonChim) / Merged
+track_df <- track_df %>%
+  mutate(
+    Filtered_pct  = round(Filtered / Input * 100, 1),
+    DenoisedF_pct = round(DenoisedF / Input * 100, 1),
+    DenoisedR_pct = round(DenoisedR / Input * 100, 1),
+    Merged_pct    = round(Merged / Input * 100, 1),
+    NonChim_pct   = round(NonChim / Input * 100, 1),
+    ChimeraRate   = round((Merged - NonChim) / Merged * 100, 1)
+  )
+
+# ==== Calculate Summary Statistics ====
+# Compute averages and central tendencies for reporting
+avg_filtered          <- mean(track_df$Filtered_pct, na.rm = TRUE)
+avg_denoisedF         <- mean(track_df$DenoisedF_pct, na.rm = TRUE)
+avg_denoisedR         <- mean(track_df$DenoisedR_pct, na.rm = TRUE)
+avg_merged            <- mean(track_df$Merged_pct, na.rm = TRUE)
+avg_nonchim           <- mean(track_df$NonChim_pct, na.rm = TRUE)
+avg_chimera           <- mean(track_df$ChimeraRate, na.rm = TRUE)
+mean_nonchim_reads    <- mean(track_df$NonChim, na.rm = TRUE)
+median_nonchim_reads  <- median(track_df$NonChim, na.rm = TRUE)
+
+# ==== Console Summary Output ====
+# Use cat() to log the QC summary in a readable form
+cat("===== DADA2 Read Tracking Summary (All Samples) =====\n")
+cat("- Avg % retained after filtering:     ", avg_filtered, "%\n")
+cat("- Avg % denoised (forward reads):     ", avg_denoisedF, "%\n")
+cat("- Avg % denoised (reverse reads):     ", avg_denoisedR, "%\n")
+cat("- Avg % merged:                       ", avg_merged, "%\n")
+cat("- Avg % non-chimeric:                 ", avg_nonchim, "%\n")
+cat("- Avg chimera removal rate:           ", avg_chimera, "%\n")
+cat("- Mean non-chimeric reads/sample:     ", round(mean_nonchim_reads), "\n")
+cat("- Median non-chimeric reads/sample:   ", round(median_nonchim_reads), "\n")
+
+# If track_df doesn't have a Sample column, recreate it
+if (!"Sample" %in% colnames(track_df)) {
+  track_df <- track_df %>%
+    mutate(Sample = rownames(track.nbr.reads)) %>%
+    relocate(Sample)  # Move Sample to the front
+}
+
+# ==== Identify Best/Worst Retained Samples (by % NonChim) ====
+top5_best <- track_df %>%
+  arrange(desc(NonChim_pct)) %>%
+  select(Sample, NonChim, NonChim_pct) %>%
+  head(5)
+
+bottom5_worst <- track_df %>%
+  arrange(NonChim_pct) %>%
+  select(Sample, NonChim, NonChim_pct) %>%
+  head(5)
+
+# ==== Print Summaries ====
+cat("\n===== Top 5 Best Retained Samples (by % NonChim) =====\n")
+print(top5_best)
+
+cat("\n===== Bottom 5 Worst Retained Samples (by % NonChim) =====\n")
+print(bottom5_worst)
+
 
 # Convert the object to a tibble 
 track_tibble <- as_tibble(track.nbr.reads, rownames = "Sample")
@@ -690,7 +894,6 @@ p2 <- dada2_results %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Combine the plots
-library(patchwork)
 combined_plot <- p1 / p2 + plot_layout(guides = "collect")
 
 # Add a shared title
